@@ -2,7 +2,7 @@
 {{#tweets}}
 <p>
 Name: {{name}}<br>
-Message: {{message}}<br>
+Message: <b>{{message}}</b><br>
 Timestamp: {{timestamp}}
 </p>
 {{/tweets}}
