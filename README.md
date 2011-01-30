@@ -1,5 +1,5 @@
 FIRST THING!  
-git submodule init
+git submodule init  
 git submodule update
 
 This will pull all the required deps in automagically  
