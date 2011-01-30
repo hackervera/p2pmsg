@@ -1,10 +1,10 @@
 var dgram = require('dgram');
 var message = new Buffer(JSON.stringify({"+end":"38666817e1b38470644e004b9356c1622368fa57"}));
 var socket = dgram.createSocket("udp4");
-var ezcrypto = require('../ezcrypto-js/ezcrypto.js').ezcrypto;
-var Mu = require('../Mu/lib/mu');
+var ezcrypto = require('./ezcrypto-js/ezcrypto.js').ezcrypto;
+var Mu = require('./Mu/lib/mu');
 var fs = require('fs');
-var sqlite = require('../node-sqlite/sqlite');
+var sqlite = require('./node-sqlite/sqlite');
 var db = new sqlite.Database();
 var http = require('http');
 var parser = require('url').parse;

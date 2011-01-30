@@ -1,7 +1,7 @@
 var dgram = require('dgram');
 var crypto = require('crypto');
 var fs = require('fs');
-var ezcrypto = require('../ezcrypto-js/ezcrypto.js').ezcrypto;
+var ezcrypto = require('./ezcrypto-js/ezcrypto.js').ezcrypto;
 //var process = require('process');
 
 //var keyPem = fs.readFileSync("mykey.pem", 'ascii');
