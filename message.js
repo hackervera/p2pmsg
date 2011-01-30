@@ -30,7 +30,7 @@ db.open("tweets.db", function(error){
         db.getTweets(res);
         return;
       }
-      if (!rows){
+      if (!rows || rows.length < 1){
         db.execute("select key,message,timestamp from tweets", function(error, rows){
           
           for (x in rows){
