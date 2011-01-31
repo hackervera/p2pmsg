@@ -10,6 +10,9 @@ To run the webserver/display client:
 node message.js  
 connect to http://localhost:8080/tweets
 
+Example server is running (maybe be up or down depending...)  
+http://www.nostat.us:8080/tweets
+
 To send a message to all web display clients:  
 node send.js "Some interesting message"  
 
