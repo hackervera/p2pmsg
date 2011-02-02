@@ -2,6 +2,9 @@ FIRST THING!
 git submodule init  
 git submodule update
 
+This will pull all the required deps in automagically  
+My code is alpha so use at your own risk.  
+
 Also, you need to build sqlite binding:  
 cd node-sqlite  
 ./build.sh
@@ -19,8 +22,6 @@ node client.js "Some interesting message"
 The messages from client.js will propagate to every webserver in the network.  
 It's routed using the Telehash distributed p2p network http://www.telehash.org
 
-This will pull all the required deps in automagically  
-My code is alpha so use at your own risk.  
 
 Released under MIT  
 Copyright Tyler Gillies 2011  
