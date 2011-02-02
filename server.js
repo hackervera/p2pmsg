@@ -161,5 +161,5 @@ socket.bind(12345);
 
 
 
-var pingmsg = new Buffer(JSON.stringify({"_line":console.line, "_to":"208.68.163.247:42424"}));
+var pingmsg = new Buffer(JSON.stringify({".tap":[{"has":["+key"]}],"_line":ring, "_to":"208.68.163.247:42424"}));
 socket.ping = function(){ setTimeout(function(){ socket.sendData(pingmsg); socket.ping(); },30000) };
