@@ -4,10 +4,6 @@ FIRST THING!
 **sh install.sh**  
 This automagically installs dependencies and compiles sqlite bindings
 
-Also, you need to build sqlite binding:  
-**cd node-sqlite**  
-**./build.sh**
-
 To run the webserver:  
 **node server.js**  
 connect to http://localhost:8080/tweets
