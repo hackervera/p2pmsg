@@ -10,10 +10,17 @@ var http = require('http');
 var parser = require('url').parse;
 Mu.templateRoot = './templates';
 var index;
-var logic = {
-    servername: "Yahoo"
-};
+var ring;
 
+try { 
+  data = fs.readFileSync('./keys','ascii');
+  keys = JSON.parse(data);
+} catch(e) {
+  console.log(e);
+  keys = ezcrypto.generateKey();
+  fs.writeFileSync('./keys',JSON.stringify(keys));
+}
+tweetsJavascript = fs.readFileSync('./tweets.js');
 
 db.open("tweets.db", function(error){
   if (error) {
@@ -36,36 +43,22 @@ db.open("tweets.db", function(error){
           for (x in rows){
             row = rows[x];
             row.name = row.key;
-            //row.name = 'test';
-          }
-          //console.log(rows);
+         }
           console.log("Calling render tweets from select key");
           http.renderTweets(res, rows);
         });
         return
       }    
-      //res.end(JSON.stringify(rows));
       console.log("calling render tweets from main function");
-      console.log(rows);
+      //console.log(rows);
       http.renderTweets(res, rows);
-      console.log(rows);
+      //console.log(rows);
     
     });
   };
-  //db.getTweets();
   
 });
 
-Mu.render('index.html', logic, {}, function(err, output){
-  if (err){
-    throw err;
-  }
-  
-  var buffer = '';
-  
-  output.addListener('data', function (c) {buffer += c; })
-        .addListener('end', function () { index = buffer; });
-});
 
 
 http.renderTweets = function(res, rows){
@@ -73,7 +66,7 @@ http.renderTweets = function(res, rows){
   var tweetLogic = {
     tweets: rows.reverse()
   };
-  console.log(tweetLogic);
+  //console.log(tweetLogic);
   Mu.render('tweets.html', tweetLogic, {}, function(err, output){
     if (err){
       throw err;
@@ -82,12 +75,12 @@ http.renderTweets = function(res, rows){
     var buffer = '';
     
     output.addListener('data', function (c) {buffer += c; })
-          .addListener('end', function () { res.end(buffer); console.log(buffer) });
+          .addListener('end', function () { res.end(buffer) });
   });
 };
 
 http.createServer(function(req,res){
-  res.writeHead(200, {'Content-Type': 'text/html'});
+  
   var output = ("An error occured");
   var reqdict = parser(req.url, true);
   var pathname = reqdict.pathname;
@@ -95,28 +88,40 @@ http.createServer(function(req,res){
   if (pathname == "/"){
     output = index;
   }
-  if (pathname == "/message") {
-    var data = reqdict.query.data
-  };
-  if (pathname == "/getmessage"){};
   if (pathname == "/tweets"){
+    res.writeHead(200, {'Content-Type': 'text/html'});
     db.getTweets(res);
     return;
   }
-    
+  if(pathname == "/tweets.js"){
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end(tweetsJavascript);
+    return;
+  }
+  if (pathname == "/send"){
+    console.log("LINE: " + console.line);
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    var message = reqdict.query.message;
+    var hash = ezcrypto.hash(message);
+    var signature = ezcrypto.sign(hash, keys.public, keys.private);
+    var json = {"+key":keys.public,"_line":console.line,"+end":"8bf1cce916417d16b7554135b6b075fb16dd26ce","_to":"208.68.163.247:42424", "+sig":signature, "+message":message};
+    var msg = new Buffer(JSON.stringify(json));
+    socket.sendData(msg);
+    res.end("Very well");
+    return;
+  }
+  res.writeHead(200, {'Content-Type': 'text/html'});
   res.end(output);
 }).listen(8080, "0.0.0.0");
 
 socket.sendData = function(message){ console.log(message.toString()); this.send(message, 0, message.length, 42424, "telehash.org"); }
-//socket.formatter = function(message){ new Buffer(JSON.stringify({".tap":[{"has":["+key"]}],"_line":ring, "_to":"208.68.163.247:42424"}));
 socket.on("message", function(data, rinfo){
   console.log(data.toString());
   telex = JSON.parse(data.toString());
-  //console.log("TELEX: " + JSON.stringify(telex));
-  if (telex["_ring"]){
-    ring = telex["_ring"];
+  if (telex["_ring"] || telex["_line"]){
+    ring = telex["_ring"] || telex["_line"];
     console.log("LINE: " + ring);
-    this.line = ring;
+      console.line = ring;
     var response = new Buffer(JSON.stringify({".tap":[{"has":["+key"]}],"_line":ring, "_to":"208.68.163.247:42424"}));
     this.sendData(response);
   }
@@ -124,14 +129,8 @@ socket.on("message", function(data, rinfo){
     console.log("INCOMING KEY!!!!!!!!");
     var message = telex["+message"];
     var key = telex["+key"];
-    //console.log(key);
     var signature = telex["+sig"];
-    //var verifier = crypto.createVerify('RSA-SHA1');
-    //verifier.update(message);
     var test = ezcrypto.verify(message, signature, key)
-    //console.log(message);
-    //var bool =verifier.verify(key, signature, signature_format='hex');
-    //console.log(bool);
     if (test){
       console.log("Key validates");
       var timestamp = new Date().toString();
@@ -158,5 +157,9 @@ socket.on("listening", function(){
 });
 
 socket.bind(12345);
+
+
+
+
 var pingmsg = new Buffer(JSON.stringify({"_line":socket.line, "_to":"208.68.163.247:42424"}));
 socket.ping = function(){ setTimeout(function(){ socket.sendData(pingmsg); socket.ping(); },30000) };
