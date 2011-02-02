@@ -99,12 +99,12 @@ http.createServer(function(req,res){
     return;
   }
   if (pathname == "/send"){
-    console.log("LINE: " + console.line);
+    console.log("LINE: " + socket.line);
     res.writeHead(200, {'Content-Type': 'text/html'});
     var message = reqdict.query.message;
     var hash = ezcrypto.hash(message);
     var signature = ezcrypto.sign(hash, keys.public, keys.private);
-    var json = {"+key":keys.public,"_line":console.line,"+end":"8bf1cce916417d16b7554135b6b075fb16dd26ce","_to":"208.68.163.247:42424", "+sig":signature, "+message":message};
+    var json = {"+key":keys.public,"_line":socket.line,"+end":"8bf1cce916417d16b7554135b6b075fb16dd26ce","_to":"208.68.163.247:42424", "+sig":signature, "+message":message};
     var msg = new Buffer(JSON.stringify(json));
     socket.sendData(msg);
     res.end("Very well");
@@ -121,7 +121,7 @@ socket.on("message", function(data, rinfo){
   if (telex["_ring"] || telex["_line"]){
     ring = telex["_ring"] || telex["_line"];
     console.log("LINE: " + ring);
-      console.line = ring;
+      socket.line = ring;
     var response = new Buffer(JSON.stringify({".tap":[{"has":["+key"]}],"_line":ring, "_to":"208.68.163.247:42424"}));
     this.sendData(response);
   }
@@ -161,5 +161,5 @@ socket.bind(12345);
 
 
 
-var pingmsg = new Buffer(JSON.stringify({".tap":[{"has":["+key"]}],"_line":ring, "_to":"208.68.163.247:42424"}));
+var pingmsg = new Buffer(JSON.stringify({".tap":[{"has":["+key"]}],"_line":socket.line, "_to":"208.68.163.247:42424"}));
 socket.ping = function(){ setTimeout(function(){ socket.sendData(pingmsg); socket.ping(); },30000) };
