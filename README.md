@@ -25,7 +25,6 @@ It's routed using the Telehash distributed p2p network <http://www.telehash.org>
 
 I also included a php client  
 **php client.php "Some interesting message"**  
-You need to install RSA libs with PEAR, here is the url: <http://phpseclib.sourceforge.net/pear.htm>
 
 Released under MIT  
 Copyright Tyler Gillies 2011  

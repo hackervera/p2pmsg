@@ -7,3 +7,6 @@
 [submodule "node-sqlite"]
 	path = node-sqlite
 	url = https://github.com/orlandov/node-sqlite.git
+[submodule "phpseclib"]
+	path = phpseclib
+	url = https://github.com/fishpi/phpseclib.git

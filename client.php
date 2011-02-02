@@ -1,5 +1,5 @@
 <?php
-include('Crypt/RSA.php');
+include('./phpseclib/Crypt/RSA.php');
 
 //I ported this from javascript
 function RSASign($sHashHex, $pub, $priv) {//this function copied from the rsa.js script included in Tom Wu's jsbn library
