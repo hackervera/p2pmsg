@@ -1,9 +1,8 @@
-FIRST THING!  
-**git submodule init**  
-**git submodule update**
-
-This will pull all the required deps in automagically  
 My code is alpha so use at your own risk.  
+
+FIRST THING!  
+**sh install.sh**  
+This automagically installs dependencies and compiles sqlite bindings
 
 Also, you need to build sqlite binding:  
 **cd node-sqlite**  
@@ -13,8 +12,9 @@ To run the webserver:
 **node server.js**  
 connect to http://localhost:8080/tweets
 
-Example server is running (maybe be up or down depending...)  
-<http://www.nostat.us:8080/tweets>
+Example servers are running (may be up or down depending...)  
+<http://www.nostat.us:8080/tweets>  
+<http://cowboy.asia:8080/tweets>
 
 If you enter a message in the box and press 'send', it will send your message to every other server on the entire network.
 
