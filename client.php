@@ -5,7 +5,6 @@ include('Crypt/RSA.php');
 function RSASign($sHashHex, $pub, $priv) {//this function copied from the rsa.js script included in Tom Wu's jsbn library
   $n = new Math_BigInteger($pub,16);
   $sMid = "";	$fLen = (strlen($n->toBits()) / 4) - strlen($sHashHex) - 6;
-  echo "Bitlength ".strlen($n->toBits());
   for ($i = 0; $i < $fLen; $i += 2) {
     $sMid = $sMid."ff";
   }
